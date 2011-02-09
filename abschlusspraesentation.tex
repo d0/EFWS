@@ -1,0 +1,75 @@
+\documentclass{beamer}
+
+\usetheme{Frankfurt}
+
+\usepackage[utf8x]{inputenc}
+\usepackage[UKenglish]{babel}
+\usepackage{subfigure}
+\usepackage{caption}
+
+% draw
+%\usepackage[rgb]{xcolor}
+\definecolor{hublue}{rgb}{  0, .21, .42}
+\definecolor{darkred}{rgb}{.5, 0, 0}
+\definecolor{darkgreen}{rgb}{0, .5, 0}
+\definecolor{darkblue}{rgb}{0, 0, .5}
+
+\usepackage{tikz}
+\usetikzlibrary{%
+  arrows,%
+  calc,%
+  fit,%
+  patterns,%
+  plotmarks,%
+  shapes.geometric,%
+  shapes.misc,%
+  shapes.symbols,%
+  shapes.arrows,%
+  shapes.callouts,%
+  shapes.multipart,%
+  er,%
+  backgrounds,%
+  chains,%
+  topaths,%
+  trees,%
+  matrix,%
+  folding,%
+  fadings,%
+  through,%
+  positioning,%
+  scopes,%
+  decorations.shapes,%
+  decorations.text,%
+  decorations.pathmorphing,%
+  decorations.pathreplacing,%
+  decorations.footprints,%
+  decorations.markings,%
+  shadows}
+
+\setbeamertemplate{footline}{%
+  \usebeamerfont{date in head/foot}
+%  \insertshortauthor - \inserttitle{}\hfill
+	Dominik Oepen - \inserttitle{}\hfill
+%  \usebeamertemplate{navigation symbols}\hfill
+  \insertframenumber{}/\inserttotalframenumber}
+\setbeamertemplate{sidebar right}{}
+
+
+\title{Using DisplayLink Devices with OpenWRT}
+%\subtitle{On the usability of eID-based authentication on a NFC-phone}
+\institute[{Humboldt-Universität zu Berlin}]{\inst{}Humboldt-Universität zu Berlin}
+\author[Magnus Müller \and Kai Warnicke \and Dominik Oepen]{Magnus Müller \and Kai Warnicke \and Dominik Oepen}
+\date[16.02.2011]{16. Februar 2011}
+
+\begin{document}
+	\begin{frame}
+		\titlepage
+	\end{frame}
+
+	\begin{frame}
+		\frametitle{Overview}
+		\tableofcontents
+	\end{frame}	
+	
+
+\end{document}
