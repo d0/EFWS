@@ -51,6 +51,18 @@
 		\tableofcontents
 	\end{frame}	
 
+	\begin{frame}
+		\frametitle{Motivation}
+		Touchscreen an Knoten um Anreize für Endnutzer zu schaffen sich einen EFWS-Knoten zu beschaffen.\\
+		\begin{block}{Mögliche Einsatzgebiete}
+			\begin{itemize}
+				\item Heimautomatisierung
+				\item Community-Dienste
+				\item Location-based Services
+			\end{itemize}
+		\end{block}
+	\end{frame}
+
 	\section{Displaylink}
 	
 	\begin{frame}
@@ -111,6 +123,16 @@
 
 	\section{Touchscreen}
 	
+	\begin{frame}
+		\frametitle{Ansteuerung des Touchscreen}
+		\begin{itemize}
+			\item Getrennt von Framebuffer
+			\item evtouch (X.org)
+			\item Kerneltreiber E2I
+			\item tslib zur Kalibrierung
+		\end{itemize}
+	\end{frame}	
+	
 	\section{Qt}
 	
 	\begin{frame}[containsverbatim]
@@ -155,6 +177,15 @@ munmap (data, width*height);
 		Qt is a cross-platform application  and UI framework used by hundreds of thousands of developers worldwide looking to create amazing user experiences  on Windows, Mac, Linux/X11, embedded Linux, Windows CE , Windows Mobile, Symbian  and Maemo devices.
 		\end{quote}
 	\end{frame}	
+	
+	\begin{frame}
+		\frametitle{Qt und Displaylink}
+		\begin{itemize}
+			\item Qt enthält Framebufferunterstützung (linuxfb und directfb)
+			\item Funktioniert nicht mit udlfb
+			\item Grund: Fehlender ioctl zur Aktualisierung des Bildschirminhalts
+		\end{itemize}
+	\end{frame}
 	
 	\begin{frame}[containsverbatim]
 		\frametitle{Qt patch}
