@@ -54,6 +54,26 @@
 	\section{Displaylink}
 	
 	\begin{frame}
+		\frametitle{Displaylink}
+		\begin{itemize}
+			\item Chipsätze zur Konvertierung von USB nach DVI
+			\item Serien DL-1x5 und DL-1x0
+			\item Chipsätze kommt in Geräten unterschiedlicher Hersteller zum Einsatz
+		\end{itemize}	
+	\end{frame}	
+	
+	\begin{frame}
+		\frametitle{Displaylink}
+		\begin{itemize}
+			\item Stromchiffre zur Verschlüsselung der Daten (LFSR)
+			\item Sehr effiziente Huffman-Codierung zur Kompression
+			\item Reverse Enigeering durch Florian Echtler und Chris Hodges \footnote{Reverse-Engineering DisplayLink devices -- USB to DVI for hackers \url{http://events.ccc.de/congress/2009/Fahrplan/events/3353.en.html}}
+			\item (Eingeschränkte) freie Treiber von Displaylink
+			\item Offene Treiber aus der OSS Community
+		\end{itemize}
+	\end{frame}	
+	
+	\begin{frame}
 		\frametitle{Mimo 720f}
 		\begin{center}
 			\includegraphics[scale=0.3]{img/mimo720f}
@@ -65,6 +85,17 @@
 			\item Touchscreen
 		\end{itemize}
 	\end{frame}
+
+	\begin{frame}
+		\frametitle{udlfb}
+		\begin{itemize}
+			\item Kerneltreiber um Displaylink Geräte als Framebuffer zu verwenden
+			\item Andere Treiber existieren (z.B. X.org Treiber)
+			\item Hervorgegangen aus libdlo (keine Huffmann-Codierung)
+			\item Juni 2009 in Staging-Zweig des Kernel aufgenommen (2.6.31 ?)
+			\item November 2010 in Hauptzweig übernommen (2.6.37 ?)
+		\end{itemize}
+	\end{frame}	
 			
 	\begin{frame}
 		\frametitle{Displaylink und OpenWRT}
@@ -82,13 +113,47 @@
 	
 	\section{Qt}
 	
+	\begin{frame}[containsverbatim]
+		Direkter Umgang mit Framebuffer ist mühsam:
+		\begin{lstlisting}[language=C, basicstyle=\scriptsize]
+struct fb_var_screeninfo screeninfo;
+ioctl(fd, FBIOGET_VSCREENINFO, &screeninfo);
+
+int width = screeninfo.xres;
+int height = screeninfo.yres;
+
+__u16 *data = (__u16 *) mmap (0, width*height*2,
+                                  PROT_READ|PROT_WRITE,
+                                  MAP_SHARED, fd, 0);
+
+for (int row = 0; row < height; row++) {
+    for (int column = 0; column< width; column++) {
+        data[column+row*width] = 0xe111;
+    }
+}
+
+int coords[4];
+coords[0] = 0;
+coords[1] = 0;
+coords[2] = screeninfo.xres_virtual;
+coords[3] = screeninfo.yres_virtual;
+
+if (ioctl (fd, DL_IOCTL_BLIT, &coords) == -21) {
+    cerr << "bad.." << endl;
+}
+
+munmap (data, width*height);
+		\end{lstlisting}
+	\end{frame}	
+	
 	\begin{frame}
 		\frametitle{Qt}
 		\begin{floatingfigure}[l]{1.75cm}
 			\includegraphics[scale=0.3]{img/qt-logo}
 		\end{floatingfigure}
-		
+		\begin{quote}
 		Qt is a cross-platform application  and UI framework used by hundreds of thousands of developers worldwide looking to create amazing user experiences  on Windows, Mac, Linux/X11, embedded Linux, Windows CE , Windows Mobile, Symbian  and Maemo devices.
+		\end{quote}
 	\end{frame}	
 	
 	\begin{frame}[containsverbatim]
