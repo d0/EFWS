@@ -171,6 +171,7 @@
   %% Motivation fuer Verwendung von Qt
   \frametitle{Direkter Umgang mit Framebuffer ist mühsam}
 		\begin{lstlisting}[language=C, basicstyle=\scriptsize]
+// fd wurde per fopen initialisiert
 struct fb_var_screeninfo screen;
 ioctl(fd, FBIOGET_VSCREENINFO, &screeninfo);
 
@@ -186,7 +187,7 @@ for (int row = 0; row < height; row++) {
     }
 }
 
-int coords[4] {0, 0, screen.xres_virtual, screen.yres_virtual};
+int coords[4] = {0, 0, screen.xres_virtual, screen.yres_virtual};
 
 if (ioctl (fd, DL_IOCTL_BLIT, &coords) == -21) 
     fprintf (stderr, "Error on ioctl call.\n");
