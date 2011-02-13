@@ -48,34 +48,31 @@
 	\end{frame}
 
 	\begin{frame}
-		\frametitle{Overview}
+		\frametitle{Gliederung}
 		\tableofcontents
 	\end{frame}	
 
   \section{Motivation}
 	\begin{frame}
 		\frametitle{Motivation}
-		Touchscreen an Knoten um Anreize für Endnutzer zu schaffen sich einen EFWS-Knoten zu beschaffen.\\
-		\begin{block}{Mögliche Einsatzgebiete}
+		\begin{block}{SOSEWIN-Vision}
+		\begin{itemize}
+			\item EFWS mit hunderten bis tausenden Knoten
+			\item Idealfall: Nutzer installieren selbst Knoten bei sich zu Hause
+			\item Knoten müssen dem Endnutzer Mehrwert bieten
+		\end{itemize}
+		\end{block}
+		\pause
+		\begin{block}{Mögliche Zusatzdienste}
 			\begin{itemize}
 				\item Heimautomatisierung
 				\item Community-Dienste
 				\item Location-based Services
 			\end{itemize}
 		\end{block}
+		\pause
+		Benötigt Ein-/Ausgabemöglichkeiten: Touchscreen
 	\end{frame}
-
-	\section{Displaylink}
-	
-	\begin{frame}
-		\frametitle{Displaylink}
-		\begin{itemize}
-			\item Chipsätze zur Konvertierung von USB nach DVI
-			\item Serien DL-1x5 und DL-1x0
-			\item Chipsätze kommt in Geräten unterschiedlicher Hersteller zum Einsatz 
-        (Samsung, Nanovision)
-		\end{itemize}	
-	\end{frame}	
 
 	\begin{frame}
 		\frametitle{Mimo 720f}
@@ -86,51 +83,75 @@
 		\begin{itemize}
 			\item 7 Zoll Bildschirmdiagonale, Auflösung 800*480
 			\item USB-Powered
+			\item Displaylinkchip (USB auf DVI)
 			\item Touchscreen (e2i)
 		\end{itemize}
 	\end{frame}
 
-  \subsection{Technische Details}
+	\section{Displaylink}
+	
 	\begin{frame}
 		\frametitle{Displaylink}
 		\begin{itemize}
-			\item Stromchiffre zur Verschlüsselung der Daten (LFSR)
-			\item Sehr effiziente Huffman-Codierung zur Kompression
-			\item Reverse Enigeering durch Florian Echtler und Chris Hodges \footnote{Reverse-Engineering DisplayLink devices -- USB to DVI for hackers \url{http://events.ccc.de/congress/2009/Fahrplan/events/3353.en.html}}
-			\item (Eingeschränkte) freie Treiber von Displaylink
-			\item Offene Treiber aus der OSS Community
-		\end{itemize}
+			\item Chipsätze zur Konvertierung von USB nach DVI
+			\item Serien DL-1x5 und DL-1x0
+			\item Verwendet in Geräten unterschiedlicher (u.a. Samsung, Nanovision)
+        	\item Ansteuerung über Framebuffertreiber (udlfb) oder X-Server
+		\end{itemize}	
 	\end{frame}	
-	
 
+%  \subsection{Technische Details}
+%	\begin{frame}
+%		\frametitle{Displaylink}
+%		\begin{itemize}
+%			\item Stromchiffre zur Verschlüsselung der Daten (LFSR)
+%			\item Sehr effiziente Huffman-Codierung zur Kompression
+%			\item Reverse Enigeering durch Florian Echtler und Chris Hodges \footnote{Reverse-Engineering DisplayLink devices -- USB to DVI for hackers \url{http://events.ccc.de/congress/2009/Fahrplan/events/3353.en.html}}
+%			\item (Eingeschränkte) freie Treiber von Displaylink
+%			\item Offene Treiber aus der OSS Community
+%		\end{itemize}
+%	\end{frame}	
+	
 	\begin{frame}
-		\frametitle{udlfb}
+		\frametitle{udlfb I}
 		\begin{itemize}
 			\item Kerneltreiber um Displaylink Geräte als Framebuffer zu verwenden
-			\item Andere Treiber existieren (z.B. X.org Treiber)
-			\item Hervorgegangen aus libdlo (keine Huffmann-Codierung)
+			\item Reverse-Engineering von Displaylink-Chips durch Florian Echtler und Chris Hodges
 			\item Juni 2009 in Staging-Zweig des Kernel aufgenommen (2.6.31)
-			\item November 2010 in Hauptzweig übernommen (2.6.37), erscheint ab 2.6.38 in
-        mainline kernel.
+			\item November 2010 in Hauptzweig übernommen (2.6.37), erscheint ab 2.6.38 in mainline kernel
 		\end{itemize}
 	\end{frame}	
+
+	\begin{frame}
+		\frametitle{udlfb II}
+		\begin{itemize}
+			\item Kerneloption: \lstinline{CONFIG_UDLFB}
+			\item Anschließend kann Display als \lstinline{/dev/fbX} angesprochen werden
+			\item Benötigt angepasste Software
+		\end{itemize}
+		\pause
+		\begin{center}
+			\includegraphics[scale=0.2]{img/mimo_hacking_1.jpg}
+		\end{center}
+	\end{frame}
 			
 	\begin{frame}
-		\frametitle{Displaylink und OpenWRT}
+		\frametitle{Mimo 720f und OpenWRT}
     \begin{block}{Backfire}
-        Der Standardkernel in Backfire (2.6.32.27) bringt bereits Unterstützung für udlfb
-        mit. Wir benötigen aber einen aktuelleren Kernel, da sonst erstens der Touchscreen
-        nicht funktioniert und zweitens udlfb in dieser Version nicht performant genug
-        ist.
+    	\begin{itemize}
+	    	\item Backfire-Kernel (2.6.32.27) enthält udlfb
+    		\item Alte Version $\Rightarrow$ schlechte Performance
+    		\item Keine Unterstützung für Touchscreen
+    	\end{itemize}
     \end{block}
     \begin{block}{Zwei Lösungsansätze}
-				\begin{enumerate}
-					\item Neueren Kernel in Backfire einbinden
-					\item OpenWRT Developer-Branch nutzen
-				\end{enumerate}
+		\begin{enumerate}
+			\item Neueren Kernel in Backfire einbinden
+			\item OpenWRT Developer-Branch nutzen
+		\end{enumerate}
     \end{block}
 	\end{frame}
-
+	
 %%%%%%%%%%%% Teil Magnus
   \section{Touchscreen}
 	
@@ -213,6 +234,35 @@ munmap (data, width*height);
 	\begin{frame}[containsverbatim, allowframebreaks, squeeze]
 		\frametitle{Qt patch für udlfb}
 		\begin{lstlisting}[language=diff, basicstyle=\tiny]
+--- qscreenlinuxfb_qws.h.org	2011-02-04 16:12:27.000000000 +0100
++++ qscreenlinuxfb_qws.h	2011-02-04 16:23:11.241035001 +0100
+@@ -88,7 +88,7 @@
+ 
+     virtual bool useOffscreen();
+ 
+-    enum DriverTypes { GenericDriver, EInk8Track };
++    enum DriverTypes { GenericDriver, EInk8Track,  UDLFB};
+ 
+     virtual void disconnect();
+     virtual void shutdownDevice();	
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+     
+
 --- qscreenlinuxfb_qws.cpp.org	2011-02-04 16:11:34.000000000 +0100
 +++ qscreenlinuxfb_qws.cpp2011-02-04 16:20:39.741035002 +0100
 @@ -337,7 +337,12 @@
@@ -238,21 +288,6 @@ munmap (data, width*height);
 +        ioctl(d_ptr->fd, 0xAA, &coords);
      }
  }
-
-
-
- 
---- qscreenlinuxfb_qws.h.org	2011-02-04 16:12:27.000000000 +0100
-+++ qscreenlinuxfb_qws.h	2011-02-04 16:23:11.241035001 +0100
-@@ -88,7 +88,7 @@
- 
-     virtual bool useOffscreen();
- 
--    enum DriverTypes { GenericDriver, EInk8Track };
-+    enum DriverTypes { GenericDriver, EInk8Track,  UDLFB};
- 
-     virtual void disconnect();
-     virtual void shutdownDevice();	
 		\end{lstlisting}
 	\end{frame}
 
@@ -281,5 +316,15 @@ LD_PRELOAD=/usr/lib/libts.so executable -qws
       \end{lstlisting}
     \end{block}
   \end{frame}
+
+	\begin{frame}
+		\frametitle{Ausgabe}
+		\begin{center}
+			\Huge{Fragen ?}
+		\end{center}
+		\begin{center}
+			\includegraphics[scale=0.2]{img/mimo_calc.jpg}
+		\end{center}
+	\end{frame}
 
 \end{document}
