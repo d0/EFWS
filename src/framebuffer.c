@@ -12,10 +12,8 @@
 #include <sys/mman.h>
 #include <sys/ioctl.h>
 #include <errno.h>
-#include <cstdlib>
-
-#include <iostream>
-
+#include <stdio.h>
+#include <stdlib.h>
 
 /* we need to do some more work to get that running.. */
 #define DL_IOCTL_BLIT           0xAA
@@ -23,20 +21,22 @@
 #define DL_IOCTL_BLIT_DB        0xAC
 #define DL_IOCTL_EDID           0xAD
 
-using namespace std;
 int main (void) {
     // open device and read info
     int fd = open ("/dev/fb1", O_RDWR);
-		if (fd < 0) { // error occured
-			cerr << "Couldn't open framebuffer device. ERRNO = " << errno << endl;
-			exit (-1);
-		}
+    if (fd < 0) { // error occured
+        fprintf(stderr, "Couldn't open framebuffer device. ERRNO = %d\n", errno);
+        exit (-1);
+    }
 
     struct fb_var_screeninfo screeninfo;
     ioctl(fd, FBIOGET_VSCREENINFO, &screeninfo);
-    cout << screeninfo.bits_per_pixel << endl;
-    cout << "width = " << screeninfo.xres << endl; 
-    cout << "height = " << screeninfo.yres << endl; 
+
+    printf("color depth  = %d\nwidth = \%d\nheight = %d\n",
+            screeninfo.bits_per_pixel,
+            screeninfo.xres,
+            screeninfo.yres
+           );
 
     // continue if 16 bit color depth
     if (screeninfo.bits_per_pixel == 16) {
@@ -69,13 +69,13 @@ int main (void) {
         coords[3] = screeninfo.yres_virtual;
 
         if (ioctl (fd, DL_IOCTL_BLIT, &coords) == -21) {
-            cerr << "bad.." << endl;
+            fprintf(stderr, "blit failed");
         }
 
         // mask framebuffer out of memory
         munmap (data, 2*width*height);
     } else {
-        cerr << "fucked it up" << endl;
+        fprintf(stderr, "unknown colour depth");
     }
     close (fd);
     return 0;
