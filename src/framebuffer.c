@@ -21,6 +21,14 @@
 #define DL_IOCTL_BLIT_DB        0xAC
 #define DL_IOCTL_EDID           0xAD
 
+
+/* define some colors */
+#define PINKISH    0xe111
+#define YELLOWISH  0xff00
+#define BLUEISH    0x000f
+#define GREENISH   0x0f00
+#define REDISH     0xf000
+
 int main (void) {
     // open device and read info
     int fd = open ("/dev/fb1", O_RDWR);
@@ -51,7 +59,7 @@ int main (void) {
         // process screen content line by line
         for (int row = 0; row < height; row++) {
             for (int column = 0; column< width; column++) {
-                data[column+row*width] = 0xe111;
+                data[column+row*width] = YELLOWISH;
             }
         }
 
@@ -75,7 +83,7 @@ int main (void) {
         // mask framebuffer out of memory
         munmap (data, 2*width*height);
     } else {
-        fprintf(stderr, "unknown colour depth");
+        fprintf(stderr, "unknown color depth");
     }
     close (fd);
     return 0;
