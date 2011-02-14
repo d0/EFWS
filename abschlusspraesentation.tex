@@ -7,6 +7,8 @@
 \usepackage{subfigure}
 \usepackage{caption}
 \usepackage{listings}
+\usepackage{hyperref}
+
 \lstdefinelanguage{diff}
 {
     morekeywords={+, -},
@@ -157,21 +159,24 @@
 	
 	\begin{frame}
 		\frametitle{Ansteuerung des Touchscreen}
-		\begin{itemize}
-			\item Getrennt von Framebuffer
-			\item evtouch (X-Server)
-			\item Kerneltreiber e2i
-			\item tslib zur Kalibrierung
-		\end{itemize}
+		%% Getrennt von Framebuffer
+		%% evtouch (X.org)
+		%% Kerneltreiber e2i
+		%% tslib zur Kalibrierung
+    \begin{block}{Touchscreen $\neq$ Framebuffer}
+    \includegraphics[width=\textwidth]{img/touchscreen/uebersicht.pdf}
+    \end{block}
 	\end{frame}	
 	
 	\section{Qt}
 	
 	\begin{frame}[containsverbatim, squeeze]
+  \label{ioctl}
   %% Motivation fuer Verwendung von Qt
+  %% Und: Kleine Demo dass das Teil auch funktioniert.
   \frametitle{Direkter Umgang mit Framebuffer ist mühsam}
 		\begin{lstlisting}[language=C, basicstyle=\scriptsize]
-// fd wurde per fopen initialisiert
+// fd wurde per open initialisiert
 struct fb_var_screeninfo screen;
 ioctl(fd, FBIOGET_VSCREENINFO, &screeninfo);
 
@@ -192,8 +197,9 @@ int coords[4] = {0, 0, screen.xres_virtual, screen.yres_virtual};
 if (ioctl (fd, DL_IOCTL_BLIT, &coords) == -21) 
     fprintf (stderr, "Error on ioctl call.\n");
 
-munmap (data, width*height);
+munmap (data, width*height*2);
 		\end{lstlisting}
+    \hyperlink{backtoqt}{-}
 	\end{frame}	
 	
 	\begin{frame}
@@ -201,37 +207,50 @@ munmap (data, width*height);
 		\begin{floatingfigure}[l]{1.75cm}
 			\includegraphics[scale=0.3]{img/qt-logo}
 		\end{floatingfigure}
-		\begin{quote}
-		Qt is a cross-platform application  and UI framework used by hundreds of thousands of developers worldwide looking to create amazing user experiences  on Windows, Mac, Linux/X11, embedded Linux, Windows CE , Windows Mobile, Symbian  and Maemo devices.
-		\end{quote}
     \begin{itemize}
-      \item Intuitive C++ class library
-      \item Portability across desktop and embedded operating systems
-      \item Integrated development tools with cross-platform IDE
-      \item High runtime performance and small footprint on embedded
+      \item Framework für Applikations- und Nutzerschnittstellen
+      \item Freie Lizenz (LGPL)
+      \item Weit verbreitet 
+      \item Unterstützt eingebetteten Architekturen
+      \item Integrierte Entwicklungstools
+      \item Klein auf eingebetteten Architekturen (13 Mb gepakt inklusive
+        Beispielsammlung)
     \end{itemize}
 	\end{frame}	
+
+  \begin{frame}
+    \frametitle{QtCreator}
+    \includegraphics[scale=0.2]{img/qtcreator.png}
+  \end{frame}
 	
 	\begin{frame}
 		\frametitle{Qt und Displaylink}
-    \begin{block}{Framebuffer \& Qt}
+    \begin{block}{Framebuffer \& Qt}<1->
       \begin{itemize}
-        \item Qt enthält Framebufferunterstützung (linuxfb und directfb)
-        \item Funktioniert nicht mit udlfb
-        \item Grund: Fehlender ioctl zur Aktualisierung des Bildschirminhalts
+        \item<2-> Qt enthält Framebufferunterstützung (linuxfb und directfb)
+        \item<3-> Funktioniert nicht mit udlfb
+        \item<4-> Grund: Fehlender \hyperlink{ioctl}{\beamergotobutton{ioctl}}
+          \hypertarget{backtoqt}{} zur Aktualisierung des Bildschirminhalts 
       \end{itemize}
     \end{block}
-    \begin{block}{Touchscreen \& Qt}
+    \begin{block}{Touchscreen \& Qt}<1->
         \begin{itemize}
-          \item Qt enthält Touchscreenunterstützung (LinuxInput, tslib, \ldots)
-          \item Funktioniert nicht out-of-the-box mit e2i
-          \item Grund: Kalibrierung von tslib ist nötig und Umgebungsvariablen müssen gesetzt
+          \item<5-> Qt enthält Touchscreenunterstützung (LinuxInput, tslib, \ldots)
+          \item<6-> Funktioniert nicht out-of-the-box mit e2i
+          \item<7-> Grund: Kalibrierung von tslib ist nötig und Umgebungsvariablen müssen gesetzt
             werden.
         \end{itemize}
     \end{block}
 	\end{frame}
 	
   \subsection{Framebuffer}
+  \begin{frame}
+    \frametitle{Framebufferintegration in Qt}
+    \begin{itemize}
+      \item QWS (Q Windowing System)
+      \item qscreenlinuxfb
+    \end{itemize}
+  \end{frame}
 	\begin{frame}[containsverbatim, allowframebreaks, squeeze]
 		\frametitle{Qt patch für udlfb}
 		\begin{lstlisting}[language=diff, basicstyle=\tiny]
@@ -293,6 +312,11 @@ munmap (data, width*height);
 	\end{frame}
 
   \subsection{Touchscreen}
+  \begin{frame}
+    \begin{center}
+    Bleibt nur noch Touchscreen\ldots
+    \end{center}
+  \end{frame}
 	\begin{frame}[containsverbatim, allowframebreaks]
     \frametitle{Umgang mit tslib}
     \begin{block}{Umgebungsvariablen}
