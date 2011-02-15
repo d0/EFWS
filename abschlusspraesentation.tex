@@ -85,7 +85,7 @@
 		\begin{itemize}
 			\item 7 Zoll Bildschirmdiagonale, Auflösung 800*480
 			\item USB-Powered
-			\item Displaylinkchip (USB auf DVI)
+			\item Displaylink-Chip (USB auf DVI)
 			\item Touchscreen (e2i)
 		\end{itemize}
 	\end{frame}
@@ -97,7 +97,7 @@
 		\begin{itemize}
 			\item Chipsätze zur Konvertierung von USB nach DVI
 			\item Serien DL-1x5 und DL-1x0
-			\item Verwendet in Geräten unterschiedlicher (u.a. Samsung, Nanovision)
+			\item Verwendet in Geräten unterschiedlicher Hersteller (u.a. Samsung, Nanovision)
         	\item Ansteuerung über Framebuffertreiber (udlfb) oder X-Server
 		\end{itemize}	
 	\end{frame}	
@@ -176,7 +176,7 @@
   %% Und: Kleine Demo dass das Teil auch funktioniert.
   \frametitle{Direkter Umgang mit Framebuffer ist mühsam}
 		\begin{lstlisting}[language=C, basicstyle=\scriptsize]
-// fd wurde per open initialisiert
+/* fd wurde per open initialisiert */
 struct fb_var_screeninfo screen;
 ioctl(fd, FBIOGET_VSCREENINFO, &screeninfo);
 
@@ -213,7 +213,7 @@ munmap (data, width*height*2);
       \item Weit verbreitet 
       \item Unterstützt eingebetteten Architekturen
       \item Integrierte Entwicklungstools
-      \item Klein auf eingebetteten Architekturen (13 Mb gepakt inklusive
+      \item Klein auf eingebetteten Architekturen (13 Mb gepackt inklusive
         Beispielsammlung)
     \end{itemize}
 	\end{frame}	
