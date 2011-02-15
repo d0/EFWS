@@ -158,12 +158,12 @@
   \section{Touchscreen}
 	
 	\begin{frame}
-		\frametitle{Ansteuerung des Touchscreen}
+		\frametitle{Touchscreen}
 		%% Getrennt von Framebuffer
 		%% evtouch (X.org)
 		%% Kerneltreiber e2i
 		%% tslib zur Kalibrierung
-    \begin{block}{Touchscreen $\neq$ Framebuffer}
+    \begin{block}{Anbindung des Touchscreen}
     \includegraphics[width=\textwidth]{img/touchscreen/uebersicht.pdf}
     \end{block}
 	\end{frame}	
@@ -224,18 +224,18 @@ munmap (data, width*height*2);
   \end{frame}
 	
 	\begin{frame}
-		\frametitle{Qt und Displaylink}
+		\frametitle{Qt und Mimo}
     \begin{block}{Framebuffer \& Qt}<1->
       \begin{itemize}
         \item<2-> Qt enthält Framebufferunterstützung (linuxfb und directfb)
-        \item<3-> Funktioniert nicht mit udlfb
-        \item<4-> Grund: Fehlender \hyperlink{ioctl}{\beamergotobutton{ioctl}}
+        \item<4-> Funktioniert nicht mit udlfb
+        \item<5-> Grund: Fehlender \hyperlink{ioctl}{\beamergotobutton{ioctl}}
           \hypertarget{backtoqt}{} zur Aktualisierung des Bildschirminhalts 
       \end{itemize}
     \end{block}
     \begin{block}{Touchscreen \& Qt}<1->
         \begin{itemize}
-          \item<5-> Qt enthält Touchscreenunterstützung (LinuxInput, tslib, \ldots)
+          \item<3-> Qt enthält Touchscreenunterstützung (LinuxInput, tslib, \ldots)
           \item<6-> Funktioniert nicht out-of-the-box mit e2i
           \item<7-> Grund: Kalibrierung von tslib ist nötig und Umgebungsvariablen müssen gesetzt
             werden.
